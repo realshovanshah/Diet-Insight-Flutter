@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:DietInsight/category_route.dart';
+import 'package:DietInsight/category_screen.dart';
 
 /// The function that is called when main.dart is run.
 void main() {

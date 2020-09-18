@@ -1,27 +1,66 @@
 import 'package:flutter/material.dart';
+// @required is defined in the meta.dart package
+import 'package:meta/meta.dart';
 
+import 'package:DietInsight/converter_screen.dart';
+import 'package:DietInsight/diet.dart';
+
+// We use an underscore to indicate that these variables are private.
+// See https://www.dartlang.org/guides/language/effective-dart/design#libraries
 final _rowHeight = 100.0;
-final _borderRadius = BorderRadius.circular(_rowHeight/2);
+final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
+/// A custom [Category] widget.
+///
+/// The widget is composed on an [Icon] and [Text]. Tapping on the widget shows
+/// a colored [InkWell] animation.
 class Category extends StatelessWidget {
   final String name;
   final ColorSwatch color;
   final IconData iconLocation;
+  final List<Diet> diets;
 
   /// Creates a [Category].
   ///
   /// A [Category] saves the name of the Category (e.g. 'Length'), its color for
   /// the UI, and the icon that represents it (e.g. a ruler).
-  // TODO: You'll need the name, color, and iconLocation from main.dart
+  // While the @required checks for whether a named parameter is passed in,
+  // it doesn't check whether the object passed in is null. We check that
+  // in the assert statement.
   const Category({
     Key key,
     @required this.name,
     @required this.color,
     @required this.iconLocation,
+    @required this.diets,
   })  : assert(name != null),
         assert(color != null),
         assert(iconLocation != null),
+        assert(diets != null),
         super(key: key);
+
+  /// Navigates to the [ConverterRoute].
+  void _navigateToConverter(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 1.0,
+            title: Text(
+              name,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            centerTitle: true,
+            backgroundColor: color,
+          ),
+          body: ConverterRoute(
+            color: color,
+            diets: diets,
+          ),
+        );
+      },
+    ));
+  }
 
   /// Builds a custom widget that shows [Category] information.
   ///
@@ -32,38 +71,43 @@ class Category extends StatelessWidget {
   // Theme ancestor in the tree. Below, we obtain the display1 text theme.
   // See https://docs.flutter.io/flutter/material/Theme-class.html
   Widget build(BuildContext context) {
-    // TODO: Build the custom widget here, referring to the Specs.
     return Material(
       color: Colors.transparent,
       child: Container(
         height: _rowHeight,
         child: InkWell(
           borderRadius: _borderRadius,
-          highlightColor: color[50],
-          splashColor: color[100],
-          onTap: () {
-            print("I was touched");
-          },
+          highlightColor: color,
+          splashColor: color,
+          // We can use either the () => function() or the () { function(); }
+          // syntax.
+          onTap: () => _navigateToConverter(context),
           child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: 16.0),
-                      child: Icon(
-                        iconLocation,
-                        size: 60.0,  
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        name,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    )
-                  ])),
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              // There are two ways to denote a list: `[]` and `List()`.
+              // Prefer to use the literal syntax, i.e. `[]`, instead of `List()`.
+              // You can add the type argument if you'd like, i.e. <Widget>[].
+              // See https://www.dartlang.org/guides/language/effective-dart/usage#do-use-collection-literals-when-possible
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Icon(
+                    iconLocation,
+                    size: 60.0,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    name,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
