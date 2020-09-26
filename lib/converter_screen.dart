@@ -1,3 +1,4 @@
+import 'package:DietInsight/category.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -9,26 +10,24 @@ const _padding = EdgeInsets.all(16.0);
 ///
 /// Currently, it just displays a list of mock units.
 ///
-/// While it is named ConverterRoute, a more apt name would be ConverterScreen,
+/// While it is named ConverterScreen, a more apt name would be ConverterScreen,
 /// because it is responsible for the UI at the route's destination.
 
-class ConverterRoute extends StatefulWidget {
+class ConverterScreen extends StatefulWidget {
   /// Units for this [Category].
-  final List<Diet> diets;
-  final Color color;
 
-  /// This [ConverterRoute] requires the color and units to not be null.
-  const ConverterRoute({
-    @required this.color,
-    @required this.diets,
-  })  : assert(color != null),
-        assert(diets != null);
+  final Category category;
+
+  /// This [ConverterScreen] requires the color and units to not be null.
+  const ConverterScreen({
+    @required this.category,
+  })  : assert(category != null);
 
   @override
-  _ConverterRouteState createState() => _ConverterRouteState();
+  _ConverterScreenState createState() => _ConverterScreenState();
 }
 
-class _ConverterRouteState extends State<ConverterRoute> {
+class _ConverterScreenState extends State<ConverterScreen> {
 
   Diet _fromValue;
   Diet _toValue;
@@ -47,8 +46,8 @@ class _ConverterRouteState extends State<ConverterRoute> {
   /// Sets the default values for the 'from' and 'to' [Dropdown]s.
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.diets[0];
-      _toValue = widget.diets[1];
+      _fromValue = widget.category.diets[0];
+      _toValue = widget.category.diets[1];
     });
   }
 
@@ -96,7 +95,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
   }
 
   Diet _getUnit(String unitName) {
-    return widget.diets.firstWhere(
+    return widget.category.diets.firstWhere(
       (Diet unit) {
         return unit.name == unitName;
       },
@@ -126,7 +125,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
   /// Creates fresh list of [DropdownMenuItem] widgets, given a list of [Unit]s.
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.diets) {
+    for (var unit in widget.category.diets) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
