@@ -1,3 +1,5 @@
+import 'package:DietInsight/backdrop.dart';
+import 'package:DietInsight/converter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:DietInsight/category.dart';
@@ -94,9 +96,17 @@ class _CategoryRouteState extends State<CategoryRoute> {
       backgroundColor: _backgroundColor,
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: listView,
+    // return Scaffold(
+    //   appBar: appBar,
+    //   body: listView,
+    // );
+    return Backdrop(
+      body: listView, 
+      backPanel: ConverterRoute(), 
+      backTitle: null, 
+      currentCategory: null, 
+      frontPanel: appBar, 
+      frontTitle: null,
     );
   }
 }
