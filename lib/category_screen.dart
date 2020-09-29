@@ -109,8 +109,9 @@ class _CategoryRouteState extends State<CategoryScreen> {
   /// Makes the correct number of rows for the list view.
   ///
   /// For portrait, we use a [ListView].
-  Widget _buildCategoryWidgets() {
-    return ListView.builder(
+  Widget _buildCategoryWidgets(Orientation deviceOrientation) {
+    if(deviceOrientation == Orientation.portrait){
+      return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         return CategoryWidget(
           category: _categories[index],
@@ -119,6 +120,18 @@ class _CategoryRouteState extends State<CategoryScreen> {
       },
       itemCount: _categories.length,
     );
+    }else{
+      return GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 3.0,
+        children: _categories.map((Category c){
+          return CategoryWidget(
+            category: c, 
+            onTap: _onCategoryTap,);
+        }).toList(),
+      );
+    }
+    
   }
 
   @override
@@ -129,7 +142,7 @@ class _CategoryRouteState extends State<CategoryScreen> {
         right: 8.0,
         bottom: 48.0,
       ),
-      child: _buildCategoryWidgets(),
+      child: _buildCategoryWidgets(MediaQuery.of(context).orientation),
     );
 
     return Backdrop(

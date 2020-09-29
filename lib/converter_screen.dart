@@ -21,14 +21,13 @@ class ConverterScreen extends StatefulWidget {
   /// This [ConverterScreen] requires the color and units to not be null.
   const ConverterScreen({
     @required this.category,
-  })  : assert(category != null);
+  }) : assert(category != null);
 
   @override
   _ConverterScreenState createState() => _ConverterScreenState();
 }
 
 class _ConverterScreenState extends State<ConverterScreen> {
-
   Diet _fromValue;
   Diet _toValue;
   List<DropdownMenuItem> _unitMenuItems;
@@ -37,7 +36,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   double _inputValue;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _createDropdownMenuItems();
     _setDefaults();
@@ -121,7 +120,6 @@ class _ConverterScreenState extends State<ConverterScreen> {
     }
   }
 
-
   /// Creates fresh list of [DropdownMenuItem] widgets, given a list of [Unit]s.
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
@@ -172,7 +170,6 @@ class _ConverterScreenState extends State<ConverterScreen> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -235,8 +232,8 @@ class _ConverterScreenState extends State<ConverterScreen> {
       ),
     );
 
-    final converter = ListView(
-      physics: NeverScrollableScrollPhysics(),
+    final converter = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         input,
         arrows,
@@ -246,7 +243,24 @@ class _ConverterScreenState extends State<ConverterScreen> {
 
     return Padding(
       padding: _padding,
-      child: converter,
+      child: OrientationBuilder(
+        builder: (BuildContext context, Orientation orientation) {
+          if (orientation == Orientation.portrait) {
+            return SingleChildScrollView(
+              child: converter,
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  width: 450.0,
+                  child: converter,
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

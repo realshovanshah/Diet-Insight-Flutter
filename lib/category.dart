@@ -5,13 +5,7 @@ import 'package:flutter/material.dart';
 // @required is defined in the meta.dart package
 import 'package:meta/meta.dart';
 
-import 'package:DietInsight/converter_screen.dart';
 import 'package:DietInsight/diet.dart';
-
-// We use an underscore to indicate that these variables are private.
-// See https://www.dartlang.org/guides/language/effective-dart/design#libraries
-final _rowHeight = 100.0;
-final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
 /// A custom [Category] widget.
 ///
