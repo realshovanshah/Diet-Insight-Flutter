@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:DietInsight/category_screen.dart';
 
 /// The function that is called when main.dart is run.
 void main() {
   runApp(UnitConverterApp());
 }
+
 
 /// This widget is the root of our application.
 ///

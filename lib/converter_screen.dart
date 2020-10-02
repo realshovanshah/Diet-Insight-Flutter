@@ -1,6 +1,8 @@
 import 'package:DietInsight/category.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:DietInsight/diet.dart';
 
@@ -9,9 +11,6 @@ const _padding = EdgeInsets.all(16.0);
 /// Converter screen where users can input amounts to convert.
 ///
 /// Currently, it just displays a list of mock units.
-///
-/// While it is named ConverterScreen, a more apt name would be ConverterScreen,
-/// because it is responsible for the UI at the route's destination.
 
 class ConverterScreen extends StatefulWidget {
   /// Units for this [Category].
@@ -33,44 +32,68 @@ class _ConverterScreenState extends State<ConverterScreen> {
   List<DropdownMenuItem> _unitMenuItems;
   String _convertedValue = '';
   bool _showValidationError = false;
-  double _inputValue;
+  double _inputValue = 1;
+  final _inputKey = GlobalKey(debugLabel: 'inputText');
+  Map mapDiet;
 
   @override
   void initState() {
     super.initState();
+    _getDietInfo();
     _createDropdownMenuItems();
     _setDefaults();
+  }
+
+  @override
+  void didUpdateWidget(ConverterScreen old) {
+    super.didUpdateWidget(old);
+    // We update our [DropdownMenuItem] units when we switch [Categories].
+    if (old.category != widget.category) {
+      _createDropdownMenuItems();
+      _setDefaults();
+      _getDietInfo();
+    }
   }
 
   /// Sets the default values for the 'from' and 'to' [Dropdown]s.
   void _setDefaults() {
     setState(() {
       _fromValue = widget.category.diets[0];
-      _toValue = widget.category.diets[1];
+      //  _inputValue = 1;
+      _convertedValue = "0";
     });
-  }
-
-  /// Clean up conversion; trim trailing zeros, e.g. 5.500 -> 5.5, 10.0 -> 10
-  String _format(double conversion) {
-    var outputNum = conversion.toStringAsPrecision(7);
-    if (outputNum.contains('.') && outputNum.endsWith('0')) {
-      var i = outputNum.length - 1;
-      while (outputNum[i] == '0') {
-        i -= 1;
-      }
-      outputNum = outputNum.substring(0, i + 1);
-    }
-    if (outputNum.endsWith('.')) {
-      return outputNum.substring(0, outputNum.length - 1);
-    }
-    return outputNum;
   }
 
   void _updateConversion() {
     setState(() {
-      _convertedValue =
-          _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
+      _convertedValue = (_inputValue * mapDiet[_fromValue.name]).toString();
+      // _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
     });
+    print(_fromValue.name);
+    // _getDietInfo();
+  }
+
+  Future _getDietInfo() async {
+    mapDiet = new Map();
+    for (var i = 0; i <= 3; i++) {
+      String url =
+          "https://api.edamam.com/api/food-database/v2/parser?ingr=${widget.category.diets[i].name}&app_id=c60c29fb&app_key=7d668a4c08838927668279a49c1a31de";
+
+      final client = HttpClient();
+      final request = await client.getUrl(Uri.parse(url));
+      final response = await request.close();
+      final contentAsString = await utf8.decodeStream(response);
+      final map = json.decode(contentAsString);
+      var calorie;
+
+      calorie = map["hints"][0]["food"]["nutrients"]["ENERC_KCAL"];
+      mapDiet[widget.category.diets[i].name] = calorie;
+    }
+    setState(() {
+      _convertedValue = mapDiet[_fromValue.name].toString();
+    });
+    _updateConversion();
+    print(mapDiet);
   }
 
   void _updateInputValue(String input) {
@@ -105,15 +128,6 @@ class _ConverterScreenState extends State<ConverterScreen> {
   void _updateFromConversion(dynamic unitName) {
     setState(() {
       _fromValue = _getUnit(unitName);
-    });
-    if (_inputValue != null) {
-      _updateConversion();
-    }
-  }
-
-  void _updateToConversion(dynamic unitName) {
-    setState(() {
-      _toValue = _getUnit(unitName);
     });
     if (_inputValue != null) {
       _updateConversion();
@@ -182,11 +196,12 @@ class _ConverterScreenState extends State<ConverterScreen> {
           // accepts numbers and calls the onChanged property on update.
           // You can read more about it here: https://flutter.io/text-input
           TextField(
+            key: _inputKey,
             style: Theme.of(context).textTheme.headline4,
             decoration: InputDecoration(
               labelStyle: Theme.of(context).textTheme.headline4,
               errorText: _showValidationError ? 'Invalid number entered' : null,
-              labelText: 'Input',
+              labelText: 'Quantity',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(0.0),
               ),
@@ -220,14 +235,14 @@ class _ConverterScreenState extends State<ConverterScreen> {
               style: Theme.of(context).textTheme.headline4,
             ),
             decoration: InputDecoration(
-              labelText: 'Output',
+              labelText: 'Calories',
               labelStyle: Theme.of(context).textTheme.headline4,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(0.0),
               ),
             ),
           ),
-          _createDropdown(_toValue.name, _updateToConversion),
+          // _createDropdown(_toValue.name, _updateToConversion),
         ],
       ),
     );
@@ -238,6 +253,12 @@ class _ConverterScreenState extends State<ConverterScreen> {
         input,
         arrows,
         output,
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: LinearProgressIndicator(
+            valueColor:  new AlwaysStoppedAnimation<Color>(widget.category.color),
+          ),
+        ),
       ],
     );
 

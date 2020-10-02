@@ -28,13 +28,21 @@ class _CategoryRouteState extends State<CategoryScreen> {
   Category _defaultCategory;
   Category _currentCategory;
 
-  static const _categoryNames = <String>[
-    'Generic-foods',
-    'Generic-meals',
-    'Packaged-foods',
-    'Fast-foods',
-    'Other'
-  ];
+  // static const _categoryNames = <String>[
+  //   'Drinks',
+  //   'Veggies',
+  //   'Fruits',
+  //   'Fast-foods',
+  //   'Other'
+  // ];
+
+  static const _categoryNames = {
+    'Drinks':['Cappuccino','Espresso', 'Milk', 'Coke'],
+    'Veggies':['Beans','Spinach','Potatos','Broccoli'],
+    'Fruits':['Mango','Apple','Banana','Orange'],
+    'Fast-foods':['Tacos','Burger','Chocolate','Pizza'],
+    'Non-Veg':['Egg','Fish','Chicken','Pork']
+  };
 
   static const _baseColors = <ColorSwatch>[
     ColorSwatch(0xFF6AB7A8, {
@@ -74,10 +82,11 @@ class _CategoryRouteState extends State<CategoryScreen> {
 
   /// Returns a list of mock [Diet]s.
   List<Diet> _retrieveDietList(String categoryName) {
-    return List.generate(10, (int i) {
-      i += 1;
+    return List.generate(4, (int i) {
+      i += 0;
       return Diet(
-        name: '$categoryName Diet $i',
+        // name: '$categoryName Diet $i',
+        name: _categoryNames[categoryName][i],
         conversion: i.toDouble(),
       );
     });
@@ -86,12 +95,13 @@ class _CategoryRouteState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < _categoryNames.length; i++) {
+    var categoriesList = _categoryNames.keys.toList();
+    for (var i = 0; i < categoriesList.length; i++) {
       var category = Category(
-        name: _categoryNames[i],
+        name: categoriesList[i],
         color: _baseColors[i],
         iconLocation: Icons.cake,
-        diets: _retrieveDietList(_categoryNames[i]),
+        diets: _retrieveDietList(categoriesList[i]),
       );
       if (i == 0) {
         _defaultCategory = category;
@@ -152,7 +162,7 @@ class _CategoryRouteState extends State<CategoryScreen> {
           ? ConverterScreen(category: _defaultCategory)
           : ConverterScreen(category: _currentCategory),
       backTitle: Text("Select a category"), 
-      frontTitle: Text('Diet Converter'),
+      frontTitle: Text('Diet Insight'),
     );
   }
 }
