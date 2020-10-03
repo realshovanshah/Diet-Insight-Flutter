@@ -28,13 +28,6 @@ class _CategoryRouteState extends State<CategoryScreen> {
   Category _defaultCategory;
   Category _currentCategory;
 
-  // static const _categoryNames = <String>[
-  //   'Drinks',
-  //   'Veggies',
-  //   'Fruits',
-  //   'Fast-foods',
-  //   'Other'
-  // ];
 
   static const _categoryNames = {
     'Drinks':['Cappuccino','Espresso', 'Milk', 'Coke'],
@@ -61,14 +54,6 @@ class _CategoryRouteState extends State<CategoryScreen> {
       'highlight': Color(0xFF8899A8),
       'splash': Color(0xFFA9CAE8),
     }),
-    ColorSwatch(0xFFEAD37E, {
-      'highlight': Color(0xFFEAD37E),
-      'splash': Color(0xFFFFE070),
-    }),
-    ColorSwatch(0xFF81A56F, {
-      'highlight': Color(0xFF81A56F),
-      'splash': Color(0xFF7CC159),
-    }),
     ColorSwatch(0xFFD7C0E2, {
       'highlight': Color(0xFFD7C0E2),
       'splash': Color(0xFFCA90E5),
@@ -79,6 +64,15 @@ class _CategoryRouteState extends State<CategoryScreen> {
       'error': Color(0xFF912D2D),
     }),
   ];
+
+    static const _icons = <String>[
+    'assets/drinks.png',
+    'assets/veggies.png',
+    'assets/fruits.png',
+    'assets/fast-foods.png',
+    'assets/non-veg.png',
+  ];
+
 
   /// Returns a list of mock [Diet]s.
   List<Diet> _retrieveDietList(String categoryName) {
@@ -100,7 +94,7 @@ class _CategoryRouteState extends State<CategoryScreen> {
       var category = Category(
         name: categoriesList[i],
         color: _baseColors[i],
-        iconLocation: Icons.cake,
+        iconLocation: _icons[i],
         diets: _retrieveDietList(categoriesList[i]),
       );
       if (i == 0) {

@@ -17,7 +17,9 @@ class UnitConverterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Unit Converter',
       theme: ThemeData(
+        fontFamily: 'Titillium Web',
         textTheme: Theme.of(context).textTheme.apply(
+              fontFamily: 'Titillium Web',
               bodyColor: Colors.black,
               displayColor: Colors.grey[600],
             ),

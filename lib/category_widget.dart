@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:DietInsight/category.dart';
-import 'package:DietInsight/converter_screen.dart';
 
 // We use an underscore to indicate that these variables are private.
 // See https://www.dartlang.org/guides/language/effective-dart/design#libraries
@@ -25,28 +24,6 @@ class CategoryWidget extends StatelessWidget {
         assert(onTap != null),
         super(key: key);
 
-  /// Navigates to the [UnitConverter].
-  void _navigateToConverter(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<Null>(
-      builder: (BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            elevation: 1.0,
-            title: Text(
-              category.name,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            centerTitle: true,
-            backgroundColor: category.color,
-          ),
-          body: ConverterScreen(category: category),
-          // This prevents the attempt to resize the screen when the keyboard
-          // is opened
-          resizeToAvoidBottomPadding: false,
-        );
-      },
-    ));
-  }
 
    @override
   // This `context` parameter describes the location of this widget in the
@@ -76,16 +53,13 @@ class CategoryWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Icon(
-                    category.iconLocation,
-                    size: 60.0,
-                  ),
+                  child: Image.asset(category.iconLocation),
                 ),
                 Center(
                   child: Text(
                     category.name,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
               ],

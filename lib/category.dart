@@ -1,5 +1,4 @@
-import 'package:DietInsight/category_screen.dart';
-import 'package:backdrop/backdrop.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // @required is defined in the meta.dart package
@@ -15,7 +14,7 @@ class Category {
   final String name;
   final ColorSwatch color;
   final List<Diet> diets;
-  final IconData iconLocation;
+  final String iconLocation;
 
   /// Information about a [Category].
   ///

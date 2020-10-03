@@ -253,32 +253,65 @@ class _ConverterScreenState extends State<ConverterScreen> {
         input,
         arrows,
         output,
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: LinearProgressIndicator(
-            valueColor:  new AlwaysStoppedAnimation<Color>(widget.category.color),
-          ),
-        ),
       ],
     );
+
+    final loading = Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: LinearProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(
+                        widget.category.color),
+                  ),
+                );
 
     return Padding(
       padding: _padding,
       child: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
           if (orientation == Orientation.portrait) {
-            return SingleChildScrollView(
-              child: converter,
+            if(_convertedValue == '0'){
+              return Column(
+              children: [
+                converter,
+                loading,
+              ],
+            ); 
+            }
+            return Column(
+              children: [
+                converter,
+              ],
             );
           } else {
-            return SingleChildScrollView(
+            if (_convertedValue == '0'){
+              return SingleChildScrollView(
               child: Center(
                 child: Container(
                   width: 450.0,
-                  child: converter,
+                  child: Column(
+                    children: [
+                      converter,
+                      loading,
+                    ],
+                  ),
                 ),
               ),
             );
+            }else{
+              return SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  width: 450.0,
+                  child: Column(
+                    children: [
+                      converter,
+                    ],
+                  ),
+                ),
+              ),
+            );
+            }
+            
           }
         },
       ),
